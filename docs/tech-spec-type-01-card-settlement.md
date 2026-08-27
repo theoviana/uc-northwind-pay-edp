@@ -45,14 +45,18 @@ Falsifiable. Must / should / could / wont. Traced to BRD KPIs.
   and the independently summed details stay **173.45** (BRL). The
   second plant must **not** write 173.45 into the trailer. Current:
   source declares 173.44 vs rows 173.45 → Target: declaration kept,
-  batch refused. Input: that one batch, 2 record. BRD KPI-2.
+  batch refused. Input: that one batch, 2 record. Authoritative source:
+  `contracts/types/01-card-settlement/main/expected-df-source-001-finding.yaml`
+  (judge); `spec/`'s copy of the same fixture is corroborating color
+  only. BRD KPI-2.
 - **R-2 — Refuse a control mismatch.** When declared net ≠ computed
   net, the outcome is `SOURCE_CONTROL_TOTAL_MISMATCH`, status
   quarantined, **0** sanitized row, **0** business mutation, quarantine
   scope = that 1 batch, unrelated batches continue. Current: Marina
-  will not send a “corrected” file → Target: refuse, do not patch.
+  will not send a "corrected" file → Target: refuse, do not patch.
   Comparator: declared amount **less than** computed amount by 0.01
-  BRL on this fixture. BRD KPI-2.
+  BRL on this fixture, per the judge fixture cited under R-1. BRD
+  KPI-2.
 - **R-3 — Type 01 steel thread.** `valid-minimal` is accepted: net
   **173.45** BRL, **2 record**, amount delta **0.00**, status MATCHED,
   privacy holds, tolerances are **0**. Current: drop already names
@@ -65,11 +69,13 @@ Falsifiable. Must / should / could / wont. Traced to BRD KPIs.
   of those three roles exists in the drop (`valid-minimal`,
   `malformed`, `df-source-001`).
 - **R-5 — Inbound does not outrank the judge.** `spec/` is mail.
-  `contracts/` is the judge. When Marina says “settlement total” and
-  the layout says “net amount,” the contract still wins. **0** edits
-  of `contracts/` to match a meeting noun.
+  `contracts/` is the judge. When Marina says "settlement total" and
+  the layout says "net amount," the contract still wins — confirmed
+  directly against `contracts/types/01-card-settlement/layout.yaml:74`
+  (`net_amount_brl`), not assumed from the inbound layout doc. **0**
+  edits of `contracts/` to match a meeting noun.
 - **R-6 — Frozen plant.** Nothing in `legacy/`, `contracts/`, `gen/`,
-  or `infra/` is edited to make a later gate pass. At least 4 frozen
+  or `infra/` is edited to make a later gate pass. Exactly 4 frozen
   trees named. Java is not replaced. The second plant does not import
   Java to invent an answer.
 - **R-7 — First write of the second plant is later, and is not SFTP.**
@@ -79,6 +85,13 @@ Falsifiable. Must / should / could / wont. Traced to BRD KPIs.
 - **R-8 — Types in the drop.** Exactly 5 live types are in this drop
   (`01`–`05`). Type 01 is the steel thread (1 type tonight). Types
   02–05 exist (4 types later). Type 06 count in this drop = **0**.
+- **R-11 — Privacy dies at the parser.** Restricted values (PAN, CPF,
+  and any other value a type's privacy policy names) do not survive
+  past the second plant's own parser. Current: 0 requirements in this
+  spec state a privacy boundary for the second plant → Target: 0 raw
+  PAN or CPF instances in any parser output, landing write, log, or
+  evidence packet — a whole-output scan finds none, on every accepted
+  and every refused sample. BRD Constraints (Priya D4); ADR `0004`.
 
 ### Should
 
@@ -165,13 +178,13 @@ an answer. Dated 2026-08-25.
   owner: Helena Dias
   default (not a decision): after Consensus; not tonight
   blocks: Pass 2 calendar only
-- question: "Which word does reporting speak for trailer bytes 16–30 —
-  layout ‘net amount’ or ops ‘settlement total’ — without letting
+- question: "Which word does reporting speak for trailer bytes 16–30
+  — layout 'net amount' or ops 'settlement total' — without letting
   inbound outrank `contracts/`?"
-  owner: Marina Alves
-  default (not a decision): layout noun for the field; ops noun may
-  appear in prose; the judge is still `contracts/`
-  blocks: vocabulary in later ADRs, not tonight’s code
+  status: CLOSED — resolved in `docs/CONTEXT.md`; contract's own
+  field is `net_amount_brl` (`contracts/types/01-card-settlement/layout.yaml:74`).
+  Mechanical resolution by contract precedence; does not require
+  Marina Alves's further sign-off.
 - question: "The 2026-06-09 sync sketched a second reader and a
   medallion path. That is mail. What, if anything, is owner preference
   for Pass 3 — recorded as preference, not as Intent?"

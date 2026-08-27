@@ -88,19 +88,23 @@ The source **can** lie. Keep the declaration. Refuse the batch. Do not
 patch it.
 
 Type `01` steel thread of the lie: trailer field (layout bytes 16–30,
-**net amount** in the PDF; Marina still says **settlement total**)
+**net amount** in the contract; Marina still says **settlement total**)
 declares **173.44** while the details add to **173.45**.
 
-- Declared `173.44` (measured — Marina mail 2026-07-14; type README
-  `df-source-001`; expected finding
+- Declared `173.44`, computed `173.45` — **authoritative**:
+  `contracts/types/01-card-settlement/main/expected-df-source-001-finding.yaml`
+  (`declared_net_amount: "173.44"`, `computed_net_amount: "173.45"`) —
+  the signed judge's own fixture, checked directly, not assumed from
+  the mail.
+- Corroborating color only (inbound, not authoritative): Marina's mail
+  2026-07-14 states the same numbers in prose;
   `spec/type-01-card-settlement/expected/df-source-001.finding.yaml`
-  `declared_net_amount: "173.44"`).
-- Computed `173.45` (measured — same three sources
-  `computed_net_amount: "173.45"`).
-- Finding the drop already names: `SOURCE_CONTROL_TOTAL_MISMATCH`.
-- Batch Marina named: `B202607230000004` (measured — mail 2026-07-14;
-  expected finding `batch_id: B202607230000004`).
-- No CSV. No business mutation. Peers continue.
+  mirrors the judge fixture verbatim as of this drop.
+- Finding the judge names: `SOURCE_CONTROL_TOTAL_MISMATCH`.
+- Batch: `B202607230000004` (judge fixture `batch_id`; corroborated by
+  Marina's mail).
+- No CSV. No business mutation. Peers continue (judge fixture
+  `csv_produced: false`, `postgres_business_mutation: false`).
 
 Marina, 2026-07-14: she is not sending another “corrected” file. If the
 new plant quietly writes `173.45` into the trailer, ops has nothing to
@@ -280,11 +284,14 @@ Capture decision.
   not Helena’s cover letter?"
   owner: Helena Dias
   blocks: Pass 2+ schedule, not tonight’s BRD
-- question: "Ops noun ‘settlement total’ vs layout ‘net amount’ for
-  trailer bytes 16–30 — which word does reporting speak, without letting
-  inbound outrank the contract?"
-  owner: Marina Alves
-  blocks: vocabulary in Intent; not a license to edit contracts/
+- **CLOSED** — "Which word does reporting speak for trailer bytes
+  16–30 — layout 'net amount' or ops 'settlement total'?" Resolved in
+  `docs/CONTEXT.md` (net amount entry): the contract's own field name
+  is `net_amount_brl` (`contracts/types/01-card-settlement/layout.yaml:74`).
+  Contract precedence made this a **mechanical** resolution — the field
+  name is a contract fact, not a preference — so it does **not**
+  require Marina Alves's further sign-off. Ops language may still
+  appear in prose; the contract name is what reporting/Gold use.
 - question: "2026-06-09 sync sketched Parquet / Bronze / Silver / Gold
   as a second reader. Owner preference for later passes only — Capture
   must not pick it."
